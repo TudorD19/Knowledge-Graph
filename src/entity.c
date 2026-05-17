@@ -16,15 +16,34 @@
 
 const char *entity_type_to_str(EntityType type)
 {
-    /* TODO: returnează șirul corespunzător fiecărei valori enum */
-    (void)type;
-    return "UNKNOWN";
+    switch (type) {
+        case PERSON:
+            return "PERSON";
+        case COMPANY:
+            return "COMPANY";
+        case LOCATION:
+            return "LOCATION";
+        case EVENT:
+            return "EVENT";
+        default:
+            return "UNKNOWN";
+    }
 }
 
 EntityType str_to_entity_type(const char *str)
 {
-    /* TODO: compară str cu numele cunoscute și returnează enum-ul */
-    (void)str;
+    // input invalid
+    if(str == NULL)
+        return (EntityType)-1;
+    if(strcmp(str, "PERSON") == 0)
+        return PERSON;
+    if(strcmp(str, "COMPANY") == 0)
+        return COMPANY;
+    if(strcmp(str, "LOCATION") == 0)
+        return LOCATION;
+    if(strcmp(str, "EVENT") == 0)
+        return EVENT;
+
     return (EntityType)-1;
 }
 
@@ -34,17 +53,33 @@ EntityType str_to_entity_type(const char *str)
 
 Entity *entity_create(const char *name, EntityType type, int id)
 {
-    /* TODO: alocă Entity, duplică name, atribuie câmpurile */
-    (void)name;
-    (void)type;
-    (void)id;
-    return NULL;
+    if(name == NULL)
+        return NULL;
+    
+    Entity *e = malloc(sizeof(Entity));
+    if(e == NULL)
+        return NULL;
+    
+    e->name = malloc(strlen(name) + 1);
+    if(e->name == NULL) {
+        free(e);
+        return NULL;
+    }
+    strcpy(e->name, name);
+
+    e->type = type;
+    e->id = id;
+
+    return e;
 }
 
 void entity_free(Entity *e)
 {
-    /* TODO: eliberează name, apoi structura */
-    (void)e;
+    if(e == NULL)
+        return;
+    
+    free(e->name);
+    free(e);
 }
 
 /* ----------------------------------------------------------
@@ -53,6 +88,9 @@ void entity_free(Entity *e)
 
 void entity_print(const Entity *e)
 {
-    /* TODO: afișează "<id> <name> <TYPE>" */
-    (void)e;
+    if(e == NULL)
+        return;
+    
+    // convertim type in str
+    printf("%d %s %s\n", e->id, e->name, entity_type_to_str(e->type));
 }
